@@ -1,1 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>솜솜의 개발 노트 on 솜솜의 개발 노트 🐇</title><link>https://tsomsomm.github.io/</link><description>Recent content in 솜솜의 개발 노트 on 솜솜의 개발 노트 🐇</description><generator>Hugo</generator><language>ko</language><atom:link href="https://tsomsomm.github.io/index.xml" rel="self" type="application/rss+xml"/></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>솜솜의 개발 노트 on 솜솜의 개발 노트 🐇</title><link>https://tsomsomm.github.io/</link><description>Recent content in 솜솜의 개발 노트 on 솜솜의 개발 노트 🐇</description><generator>Hugo</generator><language>ko</language><atom:link href="https://tsomsomm.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>☁️ GoogleSheets로 GameData 관리하기 (1)</title><link>https://tsomsomm.github.io/posts/game-develop/common/game-data1/</link><pubDate>Sun, 20 Jul 2025 00:00:00 +0000</pubDate><guid>https://tsomsomm.github.io/posts/game-develop/common/game-data1/</guid><description>&lt;p>게임 데이터를 &lt;strong>Unity 외부에서&lt;/strong> 수정하고 불러오는 방법으로 Google Spread Sheets를 사용하려고 합니다.
+데이터 파일을 Unity 외부에 두면 빌드 후에도 데이터를 수정할 수 있어서 유지보수가 쉽습니다.&lt;/p>
+&lt;p>목차는 다음과 같습니다.&lt;/p>
+&lt;p>&lt;strong>[목차]&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>Google Spread Sheets 준비&lt;/li>
+&lt;li>Unity에서 Google Spread Sheets 불러오기&lt;/li>
+&lt;li>데이터 코드 생성&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h1 id="1-google-spread-sheets-준비">
+ 1. Google Spread Sheets 준비
+ &lt;a class="anchor" href="#1-google-spread-sheets-%ec%a4%80%eb%b9%84">#&lt;/a>
+&lt;/h1>
+&lt;p>&lt;strong>Google Spread Sheets API&lt;/strong>를 사용할 수 있게 세팅해봅시다.&lt;/p>
+&lt;p>아래 링크에 접속해서, 연동할 구글 계정으로 로그인합니다.&lt;/p>
+&lt;p>🔗 
+ &lt;a href="https://console.developers.google.com/">https://console.developers.google.com/&lt;/a>&lt;/p>
+&lt;p>상단의 프로젝트 선택 창을 열어서 새 프로젝트를 생성해줍니다.&lt;/p></description></item></channel></rss>

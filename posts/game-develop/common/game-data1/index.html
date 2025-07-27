@@ -1,0 +1,371 @@
+<!doctype html><html lang=ko dir=ltr><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="게임 데이터를 Unity 외부에서 수정하고 불러오는 방법으로 Google Spread Sheets를 사용하려고 합니다.
+데이터 파일을 Unity 외부에 두면 빌드 후에도 데이터를 수정할 수 있어서 유지보수가 쉽습니다.
+목차는 다음과 같습니다.
+[목차]
+
+Google Spread Sheets 준비
+Unity에서 Google Spread Sheets 불러오기
+데이터 코드 생성
+
+
+
+  1. Google Spread Sheets 준비
+  #
+
+Google Spread Sheets API를 사용할 수 있게 세팅해봅시다.
+아래 링크에 접속해서, 연동할 구글 계정으로 로그인합니다.
+🔗 
+  https://console.developers.google.com/
+상단의 프로젝트 선택 창을 열어서 새 프로젝트를 생성해줍니다."><meta name=theme-color media="(prefers-color-scheme: light)" content="#ffffff"><meta name=theme-color media="(prefers-color-scheme: dark)" content="#343a40"><meta name=color-scheme content="light dark"><meta property="og:url" content="https://tsomsomm.github.io/posts/game-develop/common/game-data1/"><meta property="og:site_name" content="솜솜의 개발 노트 🐇"><meta property="og:title" content="☁️ GoogleSheets로 GameData 관리하기 (1)"><meta property="og:description" content="게임 데이터를 Unity 외부에서 수정하고 불러오는 방법으로 Google Spread Sheets를 사용하려고 합니다. 데이터 파일을 Unity 외부에 두면 빌드 후에도 데이터를 수정할 수 있어서 유지보수가 쉽습니다.
+목차는 다음과 같습니다.
+[목차]
+Google Spread Sheets 준비 Unity에서 Google Spread Sheets 불러오기 데이터 코드 생성 1. Google Spread Sheets 준비 # Google Spread Sheets API를 사용할 수 있게 세팅해봅시다.
+아래 링크에 접속해서, 연동할 구글 계정으로 로그인합니다.
+🔗 https://console.developers.google.com/
+상단의 프로젝트 선택 창을 열어서 새 프로젝트를 생성해줍니다."><meta property="og:locale" content="ko"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-07-20T00:00:00+00:00"><meta property="article:modified_time" content="2025-07-28T01:04:43+09:00"><title>☁️ GoogleSheets로 GameData 관리하기 (1) | 솜솜의 개발 노트 🐇</title>
+<link rel=icon href=/favicon.png><link rel=manifest href=/manifest.json><link rel=canonical href=https://tsomsomm.github.io/posts/game-develop/common/game-data1/><link rel=stylesheet href=/book.min.004d07247a10e1a65c3dde31c6279b3eccc3b2a1a18397afa88e57721c1dfebf.css integrity="sha256-AE0HJHoQ4aZcPd4xxiebPszDsqGhg5evqI5Xchwd/r8=" crossorigin=anonymous><script defer src=/fuse.min.js></script><script defer src=/ko.search.min.453ccbfca38e023f9373dcbe0b023b7f07e7fd1753430c94346a3b74da35f8cd.js integrity="sha256-RTzL/KOOAj+Tc9y+CwI7fwfn/RdTQwyUNGo7dNo1+M0=" crossorigin=anonymous></script><script defer src=/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js integrity="sha256-b2+Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC+NdcPIvZhzk=" crossorigin=anonymous></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/><span>솜솜의 개발 노트 🐇</span></a></h2><div class="book-search hidden"><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><script>document.querySelector(".book-search").classList.remove("hidden")</script><ul><li><input type=checkbox id=section-60180788ba6050a66f06a38a3a7eb30e class=toggle checked>
+<label for=section-60180788ba6050a66f06a38a3a7eb30e class=flex><a role=button class=flex-auto>🧩 Unity 게임 개발</a></label><ul><li><span>📁 Common</span><ul><li><a href=/posts/game-develop/common/game-data1/ class=active>☁️ GoogleSheets로 GameData 관리하기 (1)</a></li></ul></li></ul></li></ul><div class=custom-menu-after></div><ul><li><a href=https://themes.gohugo.io/themes/hugo-book/>[🔗 블로그 hugo theme]</a></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label><h3>☁️ GoogleSheets로 GameData 관리하기 (1)</h3><label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#1-google-spread-sheets-준비>1. Google Spread Sheets 준비</a></li><li><a href=#2-unity에서의-사용-방법>2. Unity에서의 사용 방법</a><ul><li><a href=#1-googlesheetsconfig-생성>1) GoogleSheetsConfig 생성</a></li><li><a href=#2-googlesheetmenu>2) GoogleSheetMenu</a></li><li><a href=#3-googlesheetmanager>3) GoogleSheetManager</a></li></ul></li><li><a href=#3-데이터-코드-생성>3. 데이터 코드 생성</a></li></ul></nav></aside></header><article class="markdown book-article"><p>게임 데이터를 <strong>Unity 외부에서</strong> 수정하고 불러오는 방법으로 Google Spread Sheets를 사용하려고 합니다.
+데이터 파일을 Unity 외부에 두면 빌드 후에도 데이터를 수정할 수 있어서 유지보수가 쉽습니다.</p><p>목차는 다음과 같습니다.</p><p><strong>[목차]</strong></p><ol><li>Google Spread Sheets 준비</li><li>Unity에서 Google Spread Sheets 불러오기</li><li>데이터 코드 생성</li></ol><hr><h1 id=1-google-spread-sheets-준비>1. Google Spread Sheets 준비
+<a class=anchor href=#1-google-spread-sheets-%ec%a4%80%eb%b9%84>#</a></h1><p><strong>Google Spread Sheets API</strong>를 사용할 수 있게 세팅해봅시다.</p><p>아래 링크에 접속해서, 연동할 구글 계정으로 로그인합니다.</p><p>🔗
+<a href=https://console.developers.google.com/>https://console.developers.google.com/</a></p><p>상단의 프로젝트 선택 창을 열어서 새 프로젝트를 생성해줍니다.</p><p>이 프로젝트에 우리가 해줄 일은 OAuth 클라이언트 ID를 생성하고, 고유 키를 발급받는 것입니다.
+<strong>OAuth 동의 화면</strong> 탭을 눌러서 대상을 &lsquo;외부&rsquo;로 세팅한 후 &lsquo;만들기&rsquo; 버튼을 눌러줍니다.</p><p><img src=game-data1-img1.png alt=캡쳐></p><br><p><strong>대상</strong> 탭에서 반드시 테스트 사용자로 본인 이메일을 등록해줍니다.</p><p><img src=game-data1-img5.png alt=캡쳐></p><br><p>이제 클라이언트 ID를 만들어줍니다. 애플리케이션 유형은 &lsquo;데스크톱 앱&rsquo;을 선택해줍니다.</p><p><img src=game-data1-img2.png alt=캡쳐></p><p>그러면 ID와 보안 비밀번호가 생깁니다. Unity에 연동할 때 필요하니 복사해둡시다. 참고로 비밀번호는 처음 생성한 후 다시 찾아볼 수 없으니 따로 복사해서 저장해두어야 합니다.</p><br><p>검색창에서 Google Sheets API를 검색한 후, 사용 버튼을 누르면 끝이 납니다.</p><p><img src=game-data1-img3.png alt=캡쳐></p><hr><h1 id=2-unity에서의-사용-방법>2. Unity에서의 사용 방법
+<a class=anchor href=#2-unity%ec%97%90%ec%84%9c%ec%9d%98-%ec%82%ac%ec%9a%a9-%eb%b0%a9%eb%b2%95>#</a></h1><p>유니티에 Google Spread Sheets를 연동하는 방법을 검색하면 주로 GSTU(Google Sheets To Unity)라는 무료 에셋이 많이 나옵니다.</p><p>🔗
+<a href=https://assetstore.unity.com/packages/tools/utilities/google-sheets-to-unity-73410>https://assetstore.unity.com/packages/tools/utilities/google-sheets-to-unity-73410</a></p><p>이런 좋은 무료 에셋을 가져다 사용하는 것도 나쁘지 않겠지만, 제가 원하는 것은 스프레드 시트 내용을 가져다가 바로 사용 가능한 데이터 코드로 변환하는 것입니다.</p><p>새로운 스프레드 시트를 생성하고, 다음과 같이 데이터의 첫 행에는 data type, 두번째 행에는 필드 이름을 적도록 하겠습니다.</p><table><thead><tr><th>int</th><th>string</th><th>float</th><th>enum</th></tr></thead><tbody><tr><td>Id</td><td>Name</td><td>Hp</td><td>ColorType</td></tr><tr><td>1</td><td>Knight</td><td>100</td><td>Red</td></tr><tr><td>2</td><td>Archer</td><td>80</td><td>Blue</td></tr><tr><td>3</td><td>Mage</td><td>60</td><td>Green</td></tr></tbody></table><p>이런 데이터를 입력한 후 유니티 에디터에서 딸깍 버튼을 누르면</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>TestData</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> Id { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> Name { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Hp { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> ColorType ColorType { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> TestData(<span style=color:#66d9ef>int</span> id, <span style=color:#66d9ef>string</span> name, <span style=color:#66d9ef>float</span> hp, ColorType colorType)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Id = id;
+</span></span><span style=display:flex><span>        Name = name;
+</span></span><span style=display:flex><span>        Hp = hp;
+</span></span><span style=display:flex><span>        ColorType = colorType;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>이렇게 데이터 클래스가 생성됩니다.</p><br><hr><p>구조는 이렇습니다.</p><ul><li>GoogleSheetConfig: ScriptableObject 입니다. 여러 값을 캐싱하는 용도입니다.</li><li>GoogleSheetMenu: 유니티에 메뉴를 표시해줍니다.</li><li>GoogleSheetManager: 유효한 토큰으로 시트 목록을 받아옵니다.</li><li>DataCodeGenerator: 시트 목록을 받아서 데이터 코드를 생성합니다.</li></ul><h2 id=1-googlesheetsconfig-생성>1) GoogleSheetsConfig 생성
+<a class=anchor href=#1-googlesheetsconfig-%ec%83%9d%ec%84%b1>#</a></h2><p>위에서 생성한 클라이언트 ID, 보안 비밀번호, 연동할 스프레드 시트 링크를 입력할 config 파일입니다.</p><details><summary>GoogleSheetsConfig</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#a6e22e>[CreateAssetMenu(menuName = &#34;SpreadSheetConfig&#34;)]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GoogleSheetConfig</span> : ScriptableObject
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [SerializeField]</span> <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> _clientId;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [SerializeField]</span> <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> _clientSecretNumber;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [SerializeField]</span> <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> _googleSheetId;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [SerializeField]</span> <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _portNumber = <span style=color:#ae81ff>8080</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [SerializeField]</span> <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> _cancelTimeSeconds = <span style=color:#ae81ff>30f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [SerializeField, HideInInspector]</span> <span style=color:#66d9ef>private</span> OAuthToken _oAuthToken;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> FilePath = <span style=color:#e6db74>&#34;Assets/1_Script/Common/GoogleSpreadSheet/GoogleSheetConfig.asset&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> OAuthToken OAuthTokenCache =&gt; _oAuthToken;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> (<span style=color:#66d9ef>string</span> Id, <span style=color:#66d9ef>string</span> SecretNumber) ClientInfo =&gt; (_clientId, _clientSecretNumber);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> GoogleSheetId =&gt; _googleSheetId;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> RedirectUrl =&gt; <span style=color:#e6db74>$&#34;http://localhost:{_portNumber.ToString()}/&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsAccessTokenValid =&gt; OAuthTokenCache != <span style=color:#66d9ef>null</span> &amp;&amp; !<span style=color:#66d9ef>string</span>.IsNullOrEmpty(OAuthTokenCache.AccessToken) &amp;&amp; OAuthTokenCache.NextRefreshTime &gt; DateTime.Now.Ticks;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> HasRefreshToken =&gt; OAuthTokenCache != <span style=color:#66d9ef>null</span> &amp;&amp; !<span style=color:#66d9ef>string</span>.IsNullOrEmpty(OAuthTokenCache.RefreshToken);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> CancelTimeSeconds =&gt; _cancelTimeSeconds;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> SetOAuthToken(OAuthToken token)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _oAuthToken = token;
+</span></span><span style=display:flex><span>        token.NextRefreshTime = DateTime.Now.AddSeconds(token.ExpiresIn).Ticks;
+</span></span><span style=display:flex><span><span style=color:#75715e>#if</span> UNITY_EDITOR
+</span></span><span style=display:flex><span>        EditorUtility.SetDirty(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>        AssetDatabase.SaveAssets();
+</span></span><span style=display:flex><span><span style=color:#75715e>#endif</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><h2 id=2-googlesheetmenu>2) GoogleSheetMenu
+<a class=anchor href=#2-googlesheetmenu>#</a></h2><p>UnityEditor.MenuItem으로 메뉴를 등록해 Unity Editor 상단의 탭을 클릭하면 코드가 실행되도록 합니다.</p><details><summary>GoogleSheetMenu</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#a6e22e>[MenuItem(&#34;Google Sheet/Generate Data Code&#34;)]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> GenerateDataCode()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    GenerateDataCodeAsync().Forget();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>async</span> UniTask GenerateDataCodeAsync()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> config = AssetDatabase.LoadAssetAtPath&lt;GoogleSheetConfig&gt;(GoogleSheetConfig.FilePath);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (!config)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Debug.LogError(<span style=color:#e6db74>&#34;SpreadSheetsConfig not found&#34;</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> sheets = <span style=color:#66d9ef>await</span> GoogleSheetManager.GetSheetsAsync(config);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> GoogleSheetCodeGenerator.GenerateAll(config, sheets);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><h2 id=3-googlesheetmanager>3) GoogleSheetManager
+<a class=anchor href=#3-googlesheetmanager>#</a></h2><details><summary>DataClass</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#a6e22e>[Serializable]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>OAuthToken</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;access_token&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> AccessToken { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;refresh_token&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> RefreshToken { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;token_type&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> TokenType { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;expires_in&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> ExpiresIn { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>long</span> NextRefreshTime;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>[Serializable]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GoogleSheetInfoResponse</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;sheets&#34;)]</span> <span style=color:#66d9ef>public</span> List&lt;SheetEntry&gt; Sheets { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>[Serializable]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SheetEntry</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;properties&#34;)]</span> <span style=color:#66d9ef>public</span> SheetProperties Properties { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>[Serializable]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SheetProperties</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;sheetId&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> SheetId { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;title&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> SheetName { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;index&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> Index { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;sheetType&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> SheetType { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;gridProperties&#34;)]</span> <span style=color:#66d9ef>public</span> GridProperties GridProperties { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>[Serializable]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GridProperties</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;rowCount&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> RowCount { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;columnCount&#34;)]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> ColumnCount { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SheetValueResponse</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [JsonProperty(&#34;values&#34;)]</span> <span style=color:#66d9ef>public</span> List&lt;List&lt;<span style=color:#66d9ef>string</span>&gt;&gt; Values { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>SheetInfo</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> SheetName { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span>[] ColumnTypes { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span>[] ColumnNames { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, List&lt;<span style=color:#66d9ef>string</span>&gt;&gt; EnumList { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><p>GetSheetsAsync() 함수의 내용을 이렇습니다.</p><details><summary>GoogleSheetManager.GetSheetsAsync()</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> UniTask&lt;GoogleSheetInfoResponse&gt; GetSheetsAsync(GoogleSheetConfig config)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (!config.IsAccessTokenValid)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (config.HasRefreshToken)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>await</span> RefreshAccessTokenAsync(config);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Debug.Log(<span style=color:#e6db74>&#34;🌐 Token이 없음 =&gt; 브라우저 인증 대기 중...&#34;</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> isSuccess = <span style=color:#66d9ef>await</span> StartOAuth(config);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!isSuccess)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Debug.Log(<span style=color:#e6db74>&#34;❌ 브라우저 인증 실패&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> googleSheetInfo = <span style=color:#66d9ef>await</span> FetchSheetListAsync(config);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> googleSheetInfo;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><p>AccessToken이 없을 경우 StartOAuth() 함수를 통해 새로 인증 후 토큰을 받아옵니다.
+이 때 인증을 여러번 하지 않기 위해 RefreshToken도 함께 저장합니다.</p><details><summary>GoogleSheetManager.StartOAuth()</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> UniTask&lt;<span style=color:#66d9ef>bool</span>&gt; StartOAuth(GoogleSheetConfig config)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>try</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _cts?.Cancel();
+</span></span><span style=display:flex><span>        _cts = <span style=color:#66d9ef>new</span> CancellationTokenSource();
+</span></span><span style=display:flex><span>        _cts.CancelAfter(TimeSpan.FromSeconds(config.CancelTimeSeconds));
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// OAuth 인증 URL 오픈</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> url = GetBuildOAuthUrl();
+</span></span><span style=display:flex><span>        Application.OpenURL(url);
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Unity 로컬 서버(HttpListener)로 인증 코드 받아옴</span>
+</span></span><span style=display:flex><span>        _httpListener = <span style=color:#66d9ef>new</span> HttpListener();
+</span></span><span style=display:flex><span>        _httpListener.Prefixes.Add(config.RedirectUrl);
+</span></span><span style=display:flex><span>        _httpListener.Start();
+</span></span><span style=display:flex><span>        _httpListenerContext = <span style=color:#66d9ef>await</span> _httpListener.GetContextAsync().AsUniTask().AttachExternalCancellation(_cts.Token);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> code = _httpListenerContext.Request.QueryString[<span style=color:#e6db74>&#34;code&#34;</span>];
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> responseHtml = <span style=color:#e6db74>&#34;&lt;html&gt;&lt;body&gt;&lt;h2&gt;Authentication complete. You can now return to Unity.&lt;/h2&gt;&lt;/body&gt;&lt;/html&gt;&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> buffer = Encoding.UTF8.GetBytes(responseHtml);
+</span></span><span style=display:flex><span>        _httpListenerContext.Response.ContentLength64 = buffer.Length;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> _httpListenerContext.Response.OutputStream.WriteAsync(buffer, <span style=color:#ae81ff>0</span>, buffer.Length, _cts.Token);
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 토큰 요청</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> form = <span style=color:#66d9ef>new</span> WWWForm();
+</span></span><span style=display:flex><span>        form.AddField(<span style=color:#e6db74>&#34;code&#34;</span>, code);
+</span></span><span style=display:flex><span>        form.AddField(<span style=color:#e6db74>&#34;client_id&#34;</span>, config.ClientInfo.Id);
+</span></span><span style=display:flex><span>        form.AddField(<span style=color:#e6db74>&#34;client_secret&#34;</span>, config.ClientInfo.SecretNumber);
+</span></span><span style=display:flex><span>        form.AddField(<span style=color:#e6db74>&#34;redirect_uri&#34;</span>, config.RedirectUrl);
+</span></span><span style=display:flex><span>        form.AddField(<span style=color:#e6db74>&#34;grant_type&#34;</span>, <span style=color:#e6db74>&#34;authorization_code&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> request = UnityWebRequest.Post(TokenEndpoint, form);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> request.SendWebRequest().ToUniTask(cancellationToken: _cts.Token);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (request.result != UnityWebRequest.Result.Success)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Debug.LogError(<span style=color:#e6db74>&#34;❌ Token 요청 실패: &#34;</span> + request.error);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> token = JsonConvert.DeserializeObject&lt;OAuthToken&gt;(request.downloadHandler.text);
+</span></span><span style=display:flex><span>        config.SetOAuthToken(token);
+</span></span><span style=display:flex><span>        Debug.Log(<span style=color:#e6db74>&#34;✅ Access Token 발급 성공&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>catch</span> (OperationCanceledException)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Debug.LogError(<span style=color:#e6db74>&#34;⏱️ 인증 시간 초과&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>catch</span> (Exception e)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Debug.LogError(e);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>finally</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _httpListenerContext?.Response.OutputStream?.Close();
+</span></span><span style=display:flex><span>        _httpListener.Stop();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> GetBuildOAuthUrl()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> StringBuilder(Endpoint)
+</span></span><span style=display:flex><span>            .Append(<span style=color:#e6db74>$&#34;?client_id={config.ClientInfo.Id}&#34;</span>)
+</span></span><span style=display:flex><span>            .Append(<span style=color:#e6db74>$&#34;&amp;redirect_uri={config.RedirectUrl}&#34;</span>)
+</span></span><span style=display:flex><span>            .Append(<span style=color:#e6db74>&#34;&amp;response_type=code&#34;</span>)
+</span></span><span style=display:flex><span>            .Append(<span style=color:#e6db74>&#34;&amp;scope=https://www.googleapis.com/auth/spreadsheets.readonly&#34;</span>)
+</span></span><span style=display:flex><span>            .Append(<span style=color:#e6db74>&#34;&amp;access_type=offline&amp;prompt=consent&#34;</span>)
+</span></span><span style=display:flex><span>            .ToString();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><p>AccessToken은 있는데, 만료 기한이 지났을 경우엔 RefreshAccessTokenAsync()함수를 통해 RefreshToken으로 새로 AccessToken을 받아옵니다.</p><details><summary>GoogleSheetManager.RefreshAccessTokenAsync()</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> UniTask&lt;<span style=color:#66d9ef>bool</span>&gt; RefreshAccessTokenAsync(GoogleSheetConfig config)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> form = <span style=color:#66d9ef>new</span> WWWForm();
+</span></span><span style=display:flex><span>    form.AddField(<span style=color:#e6db74>&#34;client_id&#34;</span>, config.ClientInfo.Id);
+</span></span><span style=display:flex><span>    form.AddField(<span style=color:#e6db74>&#34;client_secret&#34;</span>, config.ClientInfo.SecretNumber);
+</span></span><span style=display:flex><span>    form.AddField(<span style=color:#e6db74>&#34;refresh_token&#34;</span>, config.OAuthTokenCache.RefreshToken);
+</span></span><span style=display:flex><span>    form.AddField(<span style=color:#e6db74>&#34;grant_type&#34;</span>, <span style=color:#e6db74>&#34;refresh_token&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> request = UnityWebRequest.Post(TokenEndpoint, form);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> request.SendWebRequest().ToUniTask();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (request.result != UnityWebRequest.Result.Success)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Debug.LogError(<span style=color:#e6db74>&#34;❌ Refresh 토큰 요청 실패: &#34;</span> + request.error);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> token = JsonConvert.DeserializeObject&lt;OAuthToken&gt;(request.downloadHandler.text);
+</span></span><span style=display:flex><span>    config.SetOAuthToken(token);
+</span></span><span style=display:flex><span>    Debug.Log(<span style=color:#e6db74>&#34;🔁 AccessToken 갱신 완료&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><p>FetchSheetListAsync() 함수에서는 시트 리스트를 불러옵니다.</p><details><summary>GoogleSheetManager.FetchSheetListAsync()</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> UniTask&lt;GoogleSheetInfoResponse&gt; FetchSheetListAsync(GoogleSheetConfig config)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#66d9ef>string</span>.IsNullOrEmpty(config.GoogleSheetId))
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Debug.LogError(<span style=color:#e6db74>&#34;❌ Spreadsheet Id가 설정되지 않았습니다.&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> url = GetGoogleSheetUrl(config.GoogleSheetId);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> request = UnityWebRequest.Get(url);
+</span></span><span style=display:flex><span>    request.SetRequestHeader(<span style=color:#e6db74>&#34;Authorization&#34;</span>, <span style=color:#e6db74>$&#34;Bearer {config.OAuthTokenCache.AccessToken}&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> request.SendWebRequest().ToUniTask();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (request.result != UnityWebRequest.Result.Success)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Debug.LogError(<span style=color:#e6db74>$&#34;❌ 시트 목록 요청 실패: {request.error}&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    Debug.Log(<span style=color:#e6db74>&#34;✅ 시트 목록 불러오기 성공&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> sheetInfoJson = request.downloadHandler.text;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> sheetInfo = JsonConvert.DeserializeObject&lt;GoogleSheetInfoResponse&gt;(sheetInfoJson);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> sheetInfo;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><br><hr><h1 id=3-데이터-코드-생성>3. 데이터 코드 생성
+<a class=anchor href=#3-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%bd%94%eb%93%9c-%ec%83%9d%ec%84%b1>#</a></h1><p>이제 GoogleSheetManager.GetSheetsAsync()로 받아온 GoogleSheetInfoResponse로 데이터 코드를 생성합니다.
+GoogleSheetInfoResponse로 에는 각 시트의 이름과 같은 정보만 있을 뿐 시트의 모든 행과 열에 대한 내용이 담긴 것은 아니기 때문에, 각 시트의 데이터를 새로 로드해와야 합니다.</p><p>GoogleSheetInfoResponse.Sheets 리스트를 순회하며 Properties.SheetName으로 데이터를 로드해옵니다.</p><details><summary>LoadGoogleSheetsData()</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> UniTask&lt;SheetValueResponse&gt; LoadGoogleSheetsData(GoogleSheetConfig config, <span style=color:#66d9ef>string</span> sheetName)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> url = GetSheetValueUrl(config.GoogleSheetId, sheetName);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> request = UnityWebRequest.Get(url);
+</span></span><span style=display:flex><span>    request.SetRequestHeader(<span style=color:#e6db74>&#34;Authorization&#34;</span>, <span style=color:#e6db74>$&#34;Bearer {config.OAuthTokenCache.AccessToken}&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> request.SendWebRequest().ToUniTask();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> JsonConvert.DeserializeObject&lt;SheetValueResponse&gt;(request.downloadHandler.text);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><p>그 다음 로드한 데이터를 사용하기 편하도록 SheetInfo로 만들어줍니다.</p><p>앞의 예시 데이터에서 첫번째 행은 데이터의 타입, 두번째 행은 데이터의 필드 이름이 들어갔습니다.
+따라서 columnTypes 필드에는 sheetValue.Values[0]를, columnNames 필드에는 sheetValue.Values[1]를 넣어줍니다.</p><details><summary>GetDataForGenerate()</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> SheetInfo GetDataForGenerate(<span style=color:#66d9ef>string</span> sheetName, SheetValueResponse sheetValue)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (sheetValue.Values.Count &lt; <span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Debug.LogWarning(<span style=color:#e6db74>$&#34;⚠️ 시트 {sheetName}의 데이터가 부족합니다 (2줄 이상 필요)&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>default</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> columnTypes = sheetValue.Values[<span style=color:#ae81ff>0</span>].ToArray();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> columnNames = sheetValue.Values[<span style=color:#ae81ff>1</span>].ToArray();
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> enumDic = <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, List&lt;<span style=color:#66d9ef>string</span>&gt;&gt;();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>var</span> j = <span style=color:#ae81ff>0</span>; j &lt; columnTypes.Length; j++)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (columnTypes[j].ToLower() != TypeEnum) <span style=color:#66d9ef>continue</span>;
+</span></span><span style=display:flex><span>        enumDic.Add(j, <span style=color:#66d9ef>new</span> List&lt;<span style=color:#66d9ef>string</span>&gt;());
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>var</span> j = <span style=color:#ae81ff>2</span>; j &lt; sheetValue.Values.Count; j++)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> columns = sheetValue.Values[j].ToArray();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>var</span> k = <span style=color:#ae81ff>0</span>; k &lt; columns.Length; k++)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!enumDic.TryGetValue(k, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> enumList)) <span style=color:#66d9ef>continue</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (enumList.Contains(columns[k])) <span style=color:#66d9ef>continue</span>;
+</span></span><span style=display:flex><span>            enumDic[k].Add(columns[k]);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> SheetInfo
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        SheetName = sheetName,
+</span></span><span style=display:flex><span>        ColumnNames = columnNames,
+</span></span><span style=display:flex><span>        ColumnTypes = columnTypes,
+</span></span><span style=display:flex><span>        EnumList = enumDic,
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><p>이제 SheetInfo List를 가지고 StringBuilder.AppendLine()으로 생성할 코드를 차곡차곡 쌓아 저장하기만 하면 됩니다.</p><details><summary>MakeDataClass()</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> StringBuilder MakeDataClass(List&lt;SheetInfo&gt; loadedDataList)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> sb = <span style=color:#66d9ef>new</span> StringBuilder();
+</span></span><span style=display:flex><span>    sb.AppendLine(<span style=color:#e6db74>$&#34;namespace {GoogleSheetCodeGenerator.GeneratedGameDataNameSpace}&#34;</span>);
+</span></span><span style=display:flex><span>    sb.AppendLine(<span style=color:#e6db74>&#34;{&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> loadedData <span style=color:#66d9ef>in</span> loadedDataList)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        sb.AppendIndentedLine(<span style=color:#e6db74>$&#34;public class {loadedData.SheetName}&#34;</span>, <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>        sb.AppendIndentedLine(<span style=color:#e6db74>&#34;{&#34;</span>, <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>var</span> i = <span style=color:#ae81ff>0</span>; i &lt; loadedData.ColumnNames.Length; i++)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> columnName = loadedData.ColumnNames[i];
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (loadedData.ColumnTypes[i].ToLower() == GoogleSheetCodeGenerator.TypeEnum)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                sb.AppendIndentedLine(<span style=color:#e6db74>$&#34;public {columnName} {columnName}&#34;</span> + <span style=color:#e6db74>&#34; { get; private set; }&#34;</span>, <span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> columnType = GoogleSheetCodeGenerator.StringToTypes[loadedData.ColumnTypes[i]];
+</span></span><span style=display:flex><span>                sb.AppendIndentedLine(<span style=color:#e6db74>$&#34;public {columnType} {columnName}&#34;</span> + <span style=color:#e6db74>&#34; { get; private set; }&#34;</span>, <span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        sb.AppendLine();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> paramList = GoogleSheetCodeGenerator.MakeParameters(loadedData.ColumnTypes, loadedData.ColumnNames);
+</span></span><span style=display:flex><span>        sb.AppendIndentedLine(<span style=color:#e6db74>$&#34;public {loadedData.SheetName}({paramList})&#34;</span>, <span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>        sb.AppendIndentedLine(<span style=color:#e6db74>&#34;{&#34;</span>, <span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> columnName <span style=color:#66d9ef>in</span> loadedData.ColumnNames)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            sb.AppendIndentedLine(<span style=color:#e6db74>$&#34;{columnName} = {columnName.FirstCharacterToLower()};&#34;</span>, <span style=color:#ae81ff>3</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        sb.AppendIndentedLine(<span style=color:#e6db74>&#34;}&#34;</span>, <span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>        sb.AppendIndentedLine(<span style=color:#e6db74>&#34;}&#34;</span>, <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    sb.AppendLine(<span style=color:#e6db74>&#34;}&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> sb;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><details><summary>WriteGameDataToFileAsync()</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> UniTask WriteGameDataToFileAsync(<span style=color:#66d9ef>string</span> filePath, StringBuilder contents)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> directoryName = Path.GetDirectoryName(filePath);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (!<span style=color:#66d9ef>string</span>.IsNullOrEmpty(directoryName) &amp;&amp; !Directory.Exists(directoryName))
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Directory.CreateDirectory(directoryName);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> File.WriteAllTextAsync(filePath, contents.ToString(), UTF8NoBom);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></details><hr><br><p>여기까지 마치면 유니티 에디터의 상단 Google Sheet 탭을 통해 데이터 코드를 생성할 수 있습니다.</p><p>이제 실제 플레이 시 실제 데이터를 받아와서 이 데이터 클래스에 저장해줘야겠죠.
+이후의 내용은 다음 포스팅에서 다뤄보겠습니다.</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/commit/9cb0ee8e150a4632e45922dc11a73f5eb068434e title='Last modified by tsomsomm | 7월 27, 2025' target=_blank rel=noopener><img src=/svg/calendar.svg class=book-icon alt>
+<span>7월 27, 2025</span></a></div><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content.ko/posts/game-develop/common/game-data1.md target=_blank rel=noopener><img src=/svg/edit.svg class=book-icon alt>
+<span>Edit this page</span></a></div></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#1-google-spread-sheets-준비>1. Google Spread Sheets 준비</a></li><li><a href=#2-unity에서의-사용-방법>2. Unity에서의 사용 방법</a><ul><li><a href=#1-googlesheetsconfig-생성>1) GoogleSheetsConfig 생성</a></li><li><a href=#2-googlesheetmenu>2) GoogleSheetMenu</a></li><li><a href=#3-googlesheetmanager>3) GoogleSheetManager</a></li></ul></li><li><a href=#3-데이터-코드-생성>3. 데이터 코드 생성</a></li></ul></nav></div></aside></main></body></html>
